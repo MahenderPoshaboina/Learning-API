@@ -1,0 +1,20 @@
+version: '3'
+services:
+  flask-app:
+    build:
+      context: .  # Use the current directory as the build context
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app  # Mount the current directory into the container
+    environment:
+      - FLASK_ENV=development  # Set Flask environment to development
+    depends_on:
+      - db  # Define a database service dependency (if you're using a database)
+
+  db:
+    image: postgres:13  # Use the PostgreSQL Docker image (adjust as needed)
+    environment:
+      POSTGRES_USER: your_db_user
+      POSTGRES_PASSWORD: your_db_password
+      POSTGRES_DB: your_db_name
