@@ -23,6 +23,13 @@ jobs:
           sudo chown -R $USER:$USER .
           docker-compose up -d
 
+      - name: Build the Docker image
+        run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+
+      - name: Run unit tests
+        run: |
+          docker-compose run --rm flaskapp python test_app.py
+
       - name: Stop Docker Compose
         run: |
           docker-compose down
