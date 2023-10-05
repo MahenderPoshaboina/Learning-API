@@ -13,6 +13,6 @@ services:
       - db
 
   db:
-    image: sqlite:latest  
+    image: sqlite
     volumes:
-      - ./your_sqlite_data_directory:/var/lib/sqlite  
+      - ./your_sqlite_data_directory:/var/lib/sqlite
