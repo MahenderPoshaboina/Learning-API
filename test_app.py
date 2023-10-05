@@ -1,5 +1,5 @@
 import unittest
-from app import app, db, Drink
+from application import app, db, Drink
 
 class TestFlaskApp(unittest.TestCase):
 
