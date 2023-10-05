@@ -1,17 +1,20 @@
 import unittest
-from app import app, db, Drink
-
+import warnings
+from application import app, db, Drink
 class TestFlaskApp(unittest.TestCase):
 
     def setUp(self):
         app.config['TESTING'] = True
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
         self.app = app.test_client()
+        self.app_context = app.app_context()
+        self.app_context.push()
         db.create_all()
 
     def tearDown(self):
         db.session.remove()
         db.drop_all()
+        self.app_context.pop()
 
     def test_index(self):
         response = self.app.get('/')
@@ -19,7 +22,6 @@ class TestFlaskApp(unittest.TestCase):
         self.assertEqual(response.data.decode('utf-8'), 'Hello World')
 
     def test_get_drinks(self):
-        # Insert a sample drink into the database
         drink = Drink(name='Sample Drink', description='Test Description')
         db.session.add(drink)
         db.session.commit()
@@ -31,7 +33,10 @@ class TestFlaskApp(unittest.TestCase):
         self.assertIn('Test Description', response.data.decode('utf-8'))
 
     def test_get_nonexistent_drink(self):
-        response = self.app.get('/drinks/1')
+        with warnings.catch_warnings():  
+            warnings.filterwarnings("ignore", category=Warning)  
+            response = self.app.get('/drinks/1')
+        
         self.assertEqual(response.status_code, 404)
         self.assertIn('error', response.data.decode('utf-8'))
 
@@ -42,7 +47,6 @@ class TestFlaskApp(unittest.TestCase):
         self.assertIn('id', response.data.decode('utf-8'))
 
     def test_delete_drink(self):
-        # Insert a sample drink into the database
         drink = Drink(name='Sample Drink', description='Test Description')
         db.session.add(drink)
         db.session.commit()
@@ -52,7 +56,6 @@ class TestFlaskApp(unittest.TestCase):
         self.assertIn('message', response.data.decode('utf-8'))
 
     def test_update_drink(self):
-        # Insert a sample drink into the database
         drink = Drink(name='Sample Drink', description='Test Description')
         db.session.add(drink)
         db.session.commit()

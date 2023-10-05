@@ -29,11 +29,15 @@ def get_drinks():
         return jsonify({"drinks": output})
     except Exception as e:
         return {"error": str(e)}, 500 
-
 @app.route('/drinks/<id>')
 def get_drink(id):
-    drink=Drink.query.get_or_404(id)
-    return {'name': drink.name, 'description': drink.description}
+    # drink = Drink.query.get(id)
+    drink = Drink.query.filter_by(id=id).first()
+    if drink is None:
+        return jsonify({"error": "Drink not found"}), 404
+
+    return jsonify({"name": drink.name, "description": drink.description})
+
 @app.route('/drinks', methods= ['POST'])
 def add_drink():
     drink= Drink(name= request.json["name"], description= request.json["description"])
