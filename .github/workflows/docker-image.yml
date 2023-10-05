@@ -2,18 +2,27 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
-
   build:
 
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker build -t my-app .
+      - name: Checkout code
+        uses: actions/checkout@v2
 
+      - name: Set up Docker Compose
+        run: |
+          sudo docker-compose --version
+          sudo chown -R $USER:$USER .
+          docker-compose up -d
+
+      - name: Stop Docker Compose
+        run: |
+          docker-compose down
