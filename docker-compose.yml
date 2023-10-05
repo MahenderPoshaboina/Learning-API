@@ -13,6 +13,8 @@ services:
       - db
 
   db:
-    image: sqlite
+    image: alpine:latest  # Use the official Alpine Linux image
+    command: sh -c "apk add --no-cache sqlite && tail -f /dev/null"
     volumes:
       - ./your_sqlite_data_directory:/var/lib/sqlite
+
