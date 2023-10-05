@@ -28,7 +28,7 @@ jobs:
 
       - name: Run unit tests
         run: |
-          docker-compose run --rm flaskapp python test_app.py
+          docker-compose run --rm flask-app python test_app.py
 
       - name: Stop Docker Compose
         run: |
